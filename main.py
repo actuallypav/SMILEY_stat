@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 import time
 from datetime import datetime
+import pymysql.cursors
+
 
 def validate_time_in_range():
     try:
@@ -28,8 +30,37 @@ def popup(msg):
 
 
 def submit():
+    
+
     if validate_time_in_range() == True:
-        print("success")
+        
+        connection = pymysql.connect(
+            host = "82.33.252.194",
+            port = 3306,
+            user = "dbstat",
+            password = "sgnelkmf63oD34mez"   
+        )
+        cursor = connection.cursor()
+        sql = "SELECT * FROM db.roomcodes WHERE roomcode = %s"
+        cursor.execute(sql, (room_code_entry.get()))
+        row = cursor.fetchone()
+
+        if row:
+            print("succ")
+            sql = "SELECT * FROM db.feedback WHERE roomcode = %s AND curr_date >= %s AND curr_date <= %s"
+            start_datetime = f"{start_year.get()}-{start_month.get()}-{start_day.get()} {start_time_hours.get()}:{start_time_minutes.get()}:00"
+            end_datetime = f"{end_year.get()}-{end_month.get()}-{end_day.get()} {end_time_hours.get()}:{end_time_minutes.get()}:59"
+            data = (room_code_entry.get(), start_datetime, end_datetime)
+            cursor.execute(sql, data)
+            
+            output = cursor.fetchall()
+            print(output)
+
+        else:
+            print("fail")
+            popup("ERROR \n This Roomcode does not exist")
+            connection.close()
+
     elif validate_time_in_range == False:
         popup("ERROR \n START TIME CAN'T BE IN THE \n FUTURE OF END TIME")
 
@@ -69,10 +100,6 @@ end_month.pack(side="left")
 end_year = ttk.Combobox(end_month_year_frame, values=[i for i in range(2023, 2031)], width=4, state="readonly")
 end_year.pack(side="left", padx=(5,0))
 
-
-
-
-
 start_time_label = ttk.Label(form_frame, text="Start time: ")
 start_time_label.grid(column=0, row=2)
 
@@ -85,8 +112,6 @@ start_time_hours.pack(side="left")
 start_time_minutes = ttk.Combobox(start_time_frame, values=[i for i in range(0, 60)], width=2, state="readonly")
 start_time_minutes.pack(side="left", padx=(5,0))
 
-# start_time_entry = ttk.Entry(form_frame, command=lambda: validate_time(start_time_entry.get()))
-# start_time_entry.grid(column=1, row=2)
 
 end_time_label = ttk.Label(form_frame, text="End time: ")
 end_time_label.grid(column=0, row=3)
@@ -100,16 +125,13 @@ end_time_hours.pack(side="left")
 end_time_minutes = ttk.Combobox(end_time_frame, values=[i for i in range(0, 60)], width=2, state="readonly")
 end_time_minutes.pack(side="left", padx=(5,0))
 
-# end_time_entry = ttk.Entry(form_frame)
-# end_time_entry.grid(column=1, row=3)
-
 room_code_label = ttk.Label(form_frame, text="Room code: ")
 room_code_label.grid(column=0, row=4, sticky=tk.W)
 
 room_code_entry = ttk.Entry(form_frame)
 room_code_entry.grid(column=1, row=4)
 
-# Create a button to submit the form
+# create a button to submit the form
 submit_button = ttk.Button(form_frame, text="Submit", command=submit)
 submit_button.grid(column=0, row=7, pady=(20, 0), columnspan=2)
 
