@@ -28,10 +28,21 @@ def popup(msg):
     B1.pack()
     popup.mainloop()
 
+def draw_graphs(reactions):
+    #TODO: cleanup date
+    #TODO: open new window
+    #TODO: draw graphs
+    #TODO: if multpiple reactions print multiple views
+    #check if multiple rows
+    if len(reactions) > 1:
+        #multiple rows
+        pass
+    else:
+        #single row
+        pass
 
 def submit():
     
-
     if validate_time_in_range() == True:
         
         connection = pymysql.connect(
@@ -54,7 +65,6 @@ def submit():
             cursor.execute(sql, data)
             
             output = cursor.fetchall()
-            print(output)
 
         else:
             print("fail")
