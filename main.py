@@ -4,19 +4,34 @@ import time
 from datetime import datetime
 
 def validate_time_in_range():
-    dt_start = datetime(year = int(start_year.get()), month = int(start_month.get()), day = int(start_day.get()), hour = int(start_time_hours.get()), minute = int(start_time_minutes.get()))
-    dt_end = datetime(year = int(end_year.get()), month = int(end_month.get()), day = int(start_day.get()), hour = int(end_time_hours.get()), minute = int(end_time_minutes.get()))
-    # is start time smaller than end time
-    if dt_start < dt_end:
-        return True
-    else:
-        return False
+    try:
+        dt_start = datetime(year = int(start_year.get()), month = int(start_month.get()), day = int(start_day.get()), hour = int(start_time_hours.get()), minute = int(start_time_minutes.get()))
+        dt_end = datetime(year = int(end_year.get()), month = int(end_month.get()), day = int(start_day.get()), hour = int(end_time_hours.get()), minute = int(end_time_minutes.get()))
+        # is start time smaller than end time
+        if dt_start < dt_end:
+            return True
+        else:
+            return False
+    except ValueError:
+        popup("ERROR \n Make sure that you've entered all values.")
+    except Exception as e:
+        popup("ERROR \n this is an unhandled error: " + str(e) + "\n Please contact an administrator.")
+
+def popup(msg):
+    popup = tk.Tk()
+    popup.wm_title("!")
+    label = ttk.Label(popup, text=msg, justify="center")
+    label.pack(fill="x", pady=10)
+    B1 = ttk.Button(popup, text="Okay", command=popup.destroy)
+    B1.pack()
+    popup.mainloop()
+
 
 def submit():
     if validate_time_in_range() == True:
         print("success")
-    else:
-        print("fail")
+    elif validate_time_in_range == False:
+        popup("ERROR \n START TIME CAN'T BE IN THE \n FUTURE OF END TIME")
 
 root = tk.Tk()
 root.geometry("400x200")
