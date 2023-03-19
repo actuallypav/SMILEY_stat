@@ -67,7 +67,6 @@ def submit():
             end_datetime = f"{end_year.get()}-{end_month.get()}-{end_day.get()} {end_time_hours.get()}:{end_time_minutes.get()}:59"
             data = (room_code_entry.get(), start_datetime, end_datetime)
             cursor.execute(sql, data)
-            
 
             output = cursor.fetchall()
             draw_graphs(output[0], start_datetime)
