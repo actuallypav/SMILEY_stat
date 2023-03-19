@@ -3,6 +3,8 @@ from tkinter import ttk
 import time
 from datetime import datetime
 import pymysql.cursors
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 def validate_time_in_range():
@@ -28,21 +30,23 @@ def popup(msg):
     B1.pack()
     popup.mainloop()
 
-def draw_graphs(reactions):
-    #TODO: cleanup date
-    #TODO: open new window
-    #TODO: draw graphs
+def draw_graphs(reactions, date):
+
     #TODO: if multpiple reactions print multiple views
-    #check if multiple rows
-    if len(reactions) > 1:
-        #multiple rows
-        pass
-    else:
-        #single row
-        pass
+
+    x_labels = ['Very Unsatisfied', 'Unsatisfied', 'Neutral', 'Satisfied', 'Very Satisfied']
+    colors = ['red', 'orange', 'yellow', 'limegreen', 'green']
+    values = reactions[3:8]
+
+    fig, ax = plt.subplots()
+    ax.bar(x_labels, values, color = colors)
+    ax.set_title("Results from " + date + " in room " + str(room_code_entry.get()))
+    ax.set_xlabel("Reaction Type")
+    ax.set_ylabel("Reaction Count")
+    plt.show()
+
 
 def submit():
-    
     if validate_time_in_range() == True:
         
         connection = pymysql.connect(
@@ -64,8 +68,9 @@ def submit():
             data = (room_code_entry.get(), start_datetime, end_datetime)
             cursor.execute(sql, data)
             
-            output = cursor.fetchall()
 
+            output = cursor.fetchall()
+            draw_graphs(output[0], start_datetime)
         else:
             print("fail")
             popup("ERROR \n This Roomcode does not exist")
@@ -121,7 +126,6 @@ start_time_hours.pack(side="left")
 
 start_time_minutes = ttk.Combobox(start_time_frame, values=[i for i in range(0, 60)], width=2, state="readonly")
 start_time_minutes.pack(side="left", padx=(5,0))
-
 
 end_time_label = ttk.Label(form_frame, text="End time: ")
 end_time_label.grid(column=0, row=3)
