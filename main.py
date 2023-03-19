@@ -40,7 +40,7 @@ def draw_graphs(reactions, date):
 
     fig, ax = plt.subplots()
     ax.bar(x_labels, values, color = colors)
-    ax.set_title("Results from " + date + " in room " + str(room_code_entry.get()))
+    ax.set_title("Results from " + date + " in session " + str(room_code_entry.get()))
     ax.set_xlabel("Reaction Type")
     ax.set_ylabel("Reaction Count")
     plt.show()
