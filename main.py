@@ -50,9 +50,9 @@ def submit():
     if validate_time_in_range() == True:
         
         connection = pymysql.connect(
-            host = "82.33.252.194",
+            host = "123.456.789.101",
             port = 3306,
-            user = "dbstat",
+            user = "username",
             password = "sgnelkmf63oD34mez"   
         )
         cursor = connection.cursor()
