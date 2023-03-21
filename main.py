@@ -53,7 +53,7 @@ def submit():
             host = "123.456.789.101",
             port = 3306,
             user = "username",
-            password = "sgnelkmf63oD34mez"   
+            password = "passwd"   
         )
         cursor = connection.cursor()
         sql = "SELECT * FROM db.roomcodes WHERE roomcode = %s"
